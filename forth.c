@@ -27,7 +27,6 @@
 /*
  * The following definitions contain keywords.
  */
-const char	PRN[] = "PRN";
 const char	DUP[] = "DUP";
 
 
@@ -386,6 +385,13 @@ forth_process_word1(char *word)
 		and_mem((uint8_t)(stack_pop() & 0xff), (uint8_t)(x & 0xff));
 		return;
 	}
+
+	if ('.' == word[0]) {
+		prn();
+		return;
+	}
+
+	serial_write("UNK\r\n", 5);
 }
 
 
@@ -410,6 +416,8 @@ forth_process_word2(char *word)
 		stack_push(x);
 		return;
 	}
+
+	serial_write("UNK\r\n", 5);
 }
 
 
@@ -419,11 +427,6 @@ forth_process_word2(char *word)
 static void
 forth_process_word3(char *word)
 {
-	if (0 == strncmp(PRN, word, 3)) {
-		prn();
-		return;
-	}
-
 	if (0 == strncmp(DUP, word, 3)) {
 		stack_push(stack_peek());
 		return;
@@ -461,7 +464,7 @@ forth_process_word(char *word, uint8_t l)
 		forth_process_word3(word);
 		break;
 	default:
-		NOT_IMPLEMENTED;
+		serial_write("UNK\r\n", 5);
 	}
 }
 

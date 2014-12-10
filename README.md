@@ -15,11 +15,16 @@ Limitations:
 * Stack is limited to 16 values
 * Only the GPIO ports are supported right now
 
+
 ## REPL
 
 Words are separated by spaces or newlines.
 
-The REPL may be interacted with via a 9600-baud serial connection.
+The REPL may be interacted with via a 9600-baud serial connection. It is
+not very user-friendly; on most types of error, it resets the processor
+to keep the software from getting into an out-of-control state (see the
+ERROR messages below for details).
+
 
 ## IMMEDIATES AND PORTS
 
@@ -38,6 +43,7 @@ Read and write locations are specified as
 * PORTC: 5
 * DDRD: 6
 * PORTD: 7
+
 
 ## DICTIONARY
 
@@ -131,13 +137,13 @@ W : x y --
 
 `>>` is the logical right-shift, shifting `y` right by `x` places.
 
-### `PRN`
+### `.`
 
 ```
-PRN : x --
+. : x --
 ```
 
-`PRN` peeks at and displays the top value in the stack.
+`.` peeks at and displays the top value in the stack.
 
 ### `DUP`
 
@@ -147,17 +153,18 @@ DUP : x -- x x
 
 `DUP` duplicates the top value on the stack.
 
+
 ## ERROR MESSAGES
 
 The error messages are necessarily terse to preserve memory.
 
-* NOMEM: no memory; a malloc failed.
-* SUN: stack underflow
-* SOV: stack overflow
+* NOMEM: no memory; a malloc failed. The processor will reset.
+* SUN: stack underflow. The processor will reset.
+* SOV: stack overflow. The processor will reset.
 * EIMM: error in immediate; the immediate is either too large for an
   unsigned 16-bit integer, or it was formatted wrong
-* BADMEM: the memory location referred to is invalid
-
+* BADMEM: the memory location referred to is invalid.
+* UNK: the word is not in the interpreter's dictionary.
 
 
 ## EXAMPLES
