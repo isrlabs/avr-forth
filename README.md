@@ -207,7 +207,7 @@ W OK
 #1 OK
 #7 OK
 << OK
-PRN OK
+. OK
 80
 ```
 
