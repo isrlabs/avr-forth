@@ -9,6 +9,12 @@
 int	main(void) __attribute__((noreturn));
 
 
+/*
+ * init performs the necessary initialisation; the watchdog is reset
+ * and cleared, in the event that the bootup is occurring after an
+ * avr_abort. The serial console is also set up, which requires that
+ * BAUD is a valid definition.
+ */
 static void
 init(void)
 {
@@ -19,6 +25,10 @@ init(void)
 }
 
 
+/*
+ * main indicates that the microcontroller has started up and launches
+ * the Forth REPL.
+ */
 int
 main(void)
 {
@@ -30,3 +40,4 @@ main(void)
 
 	while (1) ;
 }
+

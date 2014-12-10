@@ -217,6 +217,7 @@ Current program size:
 ```
 avr-size avrforth.hex
    text    data     bss     dec     hex filename
-      0    3564       0    3564     dec avrforth.hex
+      0    3358       0    3358     dec avrforth.hex
 ```
+
 

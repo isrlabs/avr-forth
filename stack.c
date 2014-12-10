@@ -26,22 +26,30 @@
 #include "util.h"
 
 
+/*
+ * This stack code originally operated on heap-allocated structures,
+ * but those proved to be problematic with the limited memory
+ * available. A few performance tweaks were tested out, but a single
+ * fixed-size array turned out to be the most effective solution here.
+ */
 uint16_t	stack[STACK_SIZE];
-uint8_t		sp = 0;
+uint8_t		sp = 0; /* The stack pointer. */
+
 
 /*
- * stack_new initialises the stack.
+ * stack_new initialises the stack. This wipes the stack's memory
+ * and resets the stack pointer to zero.
  */
 void
 stack_new()
 {
-	memset(stack, 0, STACK_SIZE);
+	memset(stack, 0, STACK_SIZE*(sizeof(uint16_t)));
 	sp = 0;
 }
 
 
 /*
- * stack_push pushes a new value onto a 16-bit stack.
+ * stack_push pushes a new value onto the stack.
  */
 void
 stack_push(uint16_t val)
@@ -70,8 +78,7 @@ stack_pop()
 
 
 /*
- * stack_peek returns the top value from the stack. This is useful for
- * examining the stack.
+ * stack_peek returns the top value from the stack.
  */
 uint16_t
 stack_peek()
@@ -83,6 +90,10 @@ stack_peek()
 }
 
 
+/*
+ * stack_empty returns non-zero if the stack is empty, and zero if
+ * the stack is empty.
+ */
 int
 stack_empty()
 {
@@ -90,13 +101,10 @@ stack_empty()
 }
 
 
-void
-stack_destroy()
-{
-	return;
-}
-
-
+#ifdef DEBUG
+/*
+ * stack_dump prints the stack out.
+ */
 void
 stack_dump()
 {
@@ -109,3 +117,4 @@ stack_dump()
 		i--;
 	}
 }
+#endif

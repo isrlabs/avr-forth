@@ -22,7 +22,14 @@
 #include <stdint.h>
 
 
+/*
+ * The following macros are used as a wrapper around avr_abort.
+ */
+
+/* MALLOC_ABORT is used when a malloc fails. */
 #define MALLOC_ABORT	avr_abort("NOMEM\r\n", 7)
+/* NOT_IMPLEMENTED is a user-unfriendly way to signal rough edges. */
+#define NOT_IMPLEMENTED	avr_abort("NI\r\n", 4)
 #define STACK_UNDERFLOW	avr_abort("SUN\r\n", 5)
 #define STACK_OVERFLOW	avr_abort("SOV\r\n", 5)
 

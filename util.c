@@ -56,6 +56,10 @@ serial_write(char *s, uint8_t l)
 }
 
 
+/*
+ * serial_read blocks until a character is available from the UART,
+ * returning that character when it is received.
+ */
 char
 serial_read(void)
 {
@@ -64,6 +68,10 @@ serial_read(void)
 }
 
 
+/*
+ * avr_abort writes the message to the serial console, then triggers
+ * a watchdog reset after four seconds.
+ */
 void
 avr_abort(char *m, uint8_t l)
 {
@@ -80,9 +88,3 @@ avr_abort(char *m, uint8_t l)
 #endif
 }
 
-
-void
-not_implemented(void)
-{
-	avr_abort("NI\r\n", 4);
-}

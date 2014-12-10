@@ -24,20 +24,22 @@
 #include "util.h"
 
 
+/*
+ * The following definitions contain keywords.
+ */
 const char	PRN[] = "PRN";
 const char	DUP[] = "DUP";
-/*
-static char	rot[] = "rot";
-
- */
-const char	DIMM = '#'; /* indicate start of decimal immediate */
-const char	HIMM = '$'; /* indicate start of hex immediate */
 
 
 const char	INVALID_IMMEDIATE[] = "EIMM\r\n";
 const char	BADMEM[] = "BADMEM\r\n";
 
 
+/*
+ * forth_init carries out all the initialisation needed for the Forth
+ * interpreter. The serial console should be available by the time this
+ * is called.
+ */
 void
 forth_init(void)
 {
@@ -45,6 +47,10 @@ forth_init(void)
 }
 
 
+/*
+ * forth_process_himm attempts to extract an unsigned 16-bit integer
+ * from a word. The word is expected to be in hexadecimal format.
+ */
 static void
 forth_process_himm(char *word, uint8_t l)
 {
@@ -78,6 +84,11 @@ forth_process_himm(char *word, uint8_t l)
 	stack_push(n);
 }
 
+
+/*
+ * forth_process_dimm attempts to extract an unsigned 16-bit integer
+ * from a word. The word is expected to be in decimal format.
+ */
 static void
 forth_process_dimm(char *word, uint8_t l)
 {
@@ -110,6 +121,10 @@ forth_process_dimm(char *word, uint8_t l)
 }
 
 
+/*
+ * prn peeks at the stack and writes the topmost value to the serial
+ * console in hexadecimal form.
+ */
 static void
 prn(void)
 {
@@ -126,6 +141,9 @@ prn(void)
 }
 
 
+/*
+ * write_mem sets the port specified by loc to val.
+ */
 static void
 write_mem(uint8_t loc, uint8_t val)
 {
@@ -160,6 +178,9 @@ write_mem(uint8_t loc, uint8_t val)
 }
 
 
+/*
+ * toggle_mem toggles the port specified by loc to val.
+ */
 static void
 toggle_mem(uint8_t loc, uint8_t val)
 {
@@ -194,6 +215,9 @@ toggle_mem(uint8_t loc, uint8_t val)
 }
 
 
+/*
+ * or_mem bitwise ORs val into the port specified by loc.
+ */
 static void
 or_mem(uint8_t loc, uint8_t val)
 {
@@ -228,6 +252,9 @@ or_mem(uint8_t loc, uint8_t val)
 }
 
 
+/*
+ * and_mem bitwise ANDs val with the port specified by loc.
+ */
 static void
 and_mem(uint8_t loc, uint8_t val)
 {
@@ -261,6 +288,10 @@ and_mem(uint8_t loc, uint8_t val)
 	}
 }
 
+
+/*
+ * read_mem returns the current value for the port specified by loc.
+ */
 static void
 read_mem(uint16_t loc)
 {
@@ -299,7 +330,7 @@ read_mem(uint16_t loc)
 
 
 /*
- * process words of length 1
+ * process words of length 1.
  */
 static void
 forth_process_word1(char *word)
@@ -358,6 +389,9 @@ forth_process_word1(char *word)
 }
 
 
+/*
+ * process words of length 2.
+ */
 static void
 forth_process_word2(char *word)
 {
@@ -399,15 +433,19 @@ forth_process_word3(char *word)
 }
 
 
+/*
+ * forth_process_word takes a word as input and its length and
+ * determines what is to be done with the word.
+ */
 static void
 forth_process_word(char *word, uint8_t l)
 {
-	if (HIMM == word[0]) {
+	if ('$' == word[0]) {
 		forth_process_himm(word+1, l-1);
 		return;
 	}
 
-	if (DIMM == word[0]) {
+	if ('#' == word[0]) {
 		forth_process_dimm(word+1, l-1);
 		return;
 	}
@@ -423,15 +461,14 @@ forth_process_word(char *word, uint8_t l)
 		forth_process_word3(word);
 		break;
 	default:
-		l += 48;
-		serial_write("!", 1);
-		serial_write((char *)&l, 1);
-		serial_write("\r\n", 2);
-		not_implemented();
+		NOT_IMPLEMENTED;
 	}
 }
 
 
+/*
+ * forth_read_word reads a new word from the serial console.
+ */
 static void
 forth_read_word(void)
 {
@@ -476,6 +513,9 @@ forth_read_word(void)
 }
 
 
+/*
+ * forth_repl is a loop that continually reads and processes words.
+ */
 void
 forth_repl(void)
 {
@@ -485,3 +525,4 @@ forth_repl(void)
 		forth_read_word();
 	}
 }
+
